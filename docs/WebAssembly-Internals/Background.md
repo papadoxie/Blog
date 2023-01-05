@@ -17,4 +17,4 @@ When a WebAssembly binary is run, there are 4 main concepts to be aware of ([htt
 Each WASM module has its own sandboxed memory space which can be created manually in JavaScript using the WebAssembly.Memory() object constructor
 
 
-[[Environments|Next]]
+[[Introduction|Previous]]&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[[Environments|Next]]

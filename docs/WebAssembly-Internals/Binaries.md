@@ -33,4 +33,4 @@ Diffing 2 Modules compiled from the same source and targeting the same platform 
 This rules out the possibility of the differences being results of unexpected compiler behaviour
 
 
-[[Debugging|Next]]
+[[Compilation|Previous]]&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[[Debugging|Next]]
