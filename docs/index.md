@@ -1,4 +1,4 @@
-# Nofil's Blog
+# Blog
 
 My posts about low-level internals of whatever I've got my hands on at the moment
 
