@@ -1,9 +1,8 @@
-# Obsidian Notes
+# Nofil's Blog
 
-Publish your public notes with MkDocs
+My posts about low-level internals of whatever I've got my hands on at the moment
 
-## Hello World!
+##### [Twitter](https://twitter.com/nofilq)        [GitHub](https://github.com/papadoxie)        [LinkedIn](https://linkedin.com/in/nofil-qasim)
 
-The `index.md` in the `/docs` folder is the homepage you see here.
 
-The folders in `/docs` appear as the main sections on the navigation bar.
+## [[WebAssembly-Internals|WebAssembly Internals]]
