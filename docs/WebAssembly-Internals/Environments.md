@@ -20,4 +20,5 @@ WASI supports running WebAssembly on
 - Inside Host Applications
 
 
-[[Environments|Previous]]&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[[Compilation|Next]]
+[[Environments|Previous]]
+[[Compilation|Next]]

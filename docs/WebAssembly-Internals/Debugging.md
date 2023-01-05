@@ -8,4 +8,4 @@ Using Chrome DevTools we can view the WAT representation and the C source of a W
 
 
 
-[[Binaries|Previous]]&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+[[Binaries|Previous]]

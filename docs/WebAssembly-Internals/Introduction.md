@@ -6,4 +6,4 @@ This write-up details everything I know about WebAssembly. Here I explore the We
 I also talk about WebAssembly binary fuzzing and exploitation, and issues that arise in comparison to native binaries (focusing on x86-64).
 
 
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[[Background|Next]]
+[[Background|Next]]
