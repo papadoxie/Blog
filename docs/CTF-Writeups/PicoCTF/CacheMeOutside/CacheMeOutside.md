@@ -3,7 +3,7 @@
 # Cache Me Outside
 ## Write-up of the PicoCTF Binary Exploitation Challenge
 
-<img	src="Challenge Description.png"
+<img	src="./ChallengeDescription.png"
 		alt="Challenge Description"
 />
 
@@ -14,26 +14,26 @@ to the server is also provided.
 
 Lets download the files and try to run the binary
 
-<img	src="Setup0.png"
+<img	src="./Setup0.png"
 		alt="Challenge Description"
 />
 
 We get a crash
 This occurs because our linker is a newer version than the libc provided
 
-<img	src="Setup1.png"
+<img	src="./Setup1.png"
 		alt="Challenge Description"
 />
 
 We can fix this using pwninit which will automatically take care of this
 
-<img	src="Setup2.png"
+<img	src="./Setup2.png"
 		alt="Challenge Description"
 />
 
 Lets try running it now
 
-<img	src="Setup3.png"
+<img	src="./Setup3.png"
 		alt="Challenge Description"
 />
 

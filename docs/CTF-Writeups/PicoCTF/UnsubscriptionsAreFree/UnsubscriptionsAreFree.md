@@ -3,7 +3,7 @@
 # Unsubscriptions Are Free
 ## Write-up of the PicoCTF Binary Exploitation Challenge
 
-<img	src="Challenge Description.png"
+<img	src="./ChallengeDescription.png"
 		alt="Challenge Description"
 />
 
@@ -18,19 +18,19 @@ Let's download the files and take a look at the source
 
 Immediately we see a function that prints the flag  
 
-<img	src="Analysis0.png"
+<img	src="./Analysis0.png"
 		alt="Challenge Description"
 />
 
 Upon further analysis we can see that this function is not being called anywhere but there is another suspicious function
 
-<img	src="Analysis1.png"
+<img	src="./Analysis1.png"
 		alt="Challenge Description"
 />
 
 Running the binary we can see this prints out the address of the function that will print the flag
 
-<img	src="Analysis2.png"
+<img	src="./Analysis2.png"
 		alt="Challenge Description"
 />
 
@@ -38,42 +38,42 @@ Let's explore further to see how we can use this information
   
 The main function is pretty straightforward as well as the printMenu function
 
-<img	src="Analysis3.png"
+<img	src="./Analysis3.png"
 		alt="Challenge Description"
 />
 
-<img	src="Analysis4.png"
+<img	src="./Analysis4.png"
 		alt="Challenge Description"
 />
 
 The processInput function handles the processing of all the user input
 
-<img	src="Analysis5.png"
+<img	src="./Analysis5.png"
 		alt="Challenge Description"
 />
 
 doProcess just calls the function pointed to by the function pointer passed to it
 
-<img	src="Analysis6.png"
+<img	src="./Analysis6.png"
 		alt="Challenge Description"
 />
 
 Now let's take a look at the remaining functions
 
-<img	src="Analysis7.png"
+<img	src="./Analysis7.png"
 		alt="Challenge Description"
 />
 
 There is a pointer being freed here and this function can be called multiple times  
 This seems like a bug. Let's test it
 
-<img	src="Analysis8.png"
+<img	src="./Analysis8.png"
 		alt="Challenge Description"
 />
 
 This looks like a Use After Free bug. Let's try to find out if we can write to this allocation somehow
 
-<img	src="Analysis9.png"
+<img	src="./Analysis9.png"
 		alt="Challenge Description"
 />
 
@@ -125,7 +125,7 @@ p.sendline(b"Y")
 p.interactive()
 ```
 
-<img	src="Exploitation0.png"
+<img	src="./Exploitation0.png"
 		alt="Challenge Description"
 />
 
