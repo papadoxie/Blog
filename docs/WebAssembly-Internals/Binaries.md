@@ -31,3 +31,6 @@ This means it might not be possible to use the same exploit between Modules of t
 Diffing 2 Modules compiled from the same source and targeting the same platform yields no differences
 ![[Pasted image 20221124052004.png]]
 This rules out the possibility of the differences being results of unexpected compiler behaviour
+
+
+[[Debugging|Next]]
