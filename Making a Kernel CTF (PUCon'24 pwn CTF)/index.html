@@ -1,0 +1,753 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href=".." rel="prev"/>
+<link href="../CTF-Writeups/PicoCTF/CacheMeOutside/CacheMeOutside/" rel="next"/>
+<link href="../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.5.3, mkdocs-material-9.5.10" name="generator"/>
+<title>Making a Kernel CTF (PUCon'24 pwn CTF) - papad0xie</title>
+<link href="../assets/stylesheets/main.7e359304.min.css" rel="stylesheet"/>
+<link href="../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="indigo" data-md-color-primary="pink" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#environment">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="papad0xie" class="md-header__button md-logo" data-md-component="logo" href=".." title="papad0xie">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            papad0xie
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Making a Kernel CTF (PUCon'24 pwn CTF)
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="pink" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="blue" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="pink" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"></path></svg>
+</label>
+</form>
+<script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="papad0xie" class="md-nav__button md-logo" data-md-component="logo" href=".." title="papad0xie">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
+</a>
+    papad0xie
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="..">
+<span class="md-ellipsis">
+    Blog
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    Making a Kernel CTF (PUCon'24 pwn CTF)
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    Making a Kernel CTF (PUCon'24 pwn CTF)
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#environment">
+<span class="md-ellipsis">
+      Environment
+    </span>
+</a>
+<nav aria-label="Environment" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#vm">
+<span class="md-ellipsis">
+      VM
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#container">
+<span class="md-ellipsis">
+      Container
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#kernel">
+<span class="md-ellipsis">
+      Kernel
+    </span>
+</a>
+<nav aria-label="Kernel" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#added-exports">
+<span class="md-ellipsis">
+      Added Exports
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#removing-safety-checks-in-code">
+<span class="md-ellipsis">
+      Removing Safety Checks in Code
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#removing-safety-checks-in-config">
+<span class="md-ellipsis">
+      Removing Safety Checks in Config
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#vulnerable-module">
+<span class="md-ellipsis">
+      Vulnerable Module
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#deployment">
+<span class="md-ellipsis">
+      Deployment
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
+    CTF Writeups
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            CTF Writeups
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+<span class="md-ellipsis">
+    PicoCTF
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_3_1">
+<span class="md-nav__icon md-icon"></span>
+            PicoCTF
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3_1_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_1_1" id="__nav_3_1_1_label" tabindex="0">
+<span class="md-ellipsis">
+    CacheMeOutside
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_1_1_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_3_1_1">
+<span class="md-nav__icon md-icon"></span>
+            CacheMeOutside
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../CTF-Writeups/PicoCTF/CacheMeOutside/CacheMeOutside/">
+<span class="md-ellipsis">
+    CacheMeOutside
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3_1_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_1_2" id="__nav_3_1_2_label" tabindex="0">
+<span class="md-ellipsis">
+    HeresALIBC
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_1_2_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_3_1_2">
+<span class="md-nav__icon md-icon"></span>
+            HeresALIBC
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../CTF-Writeups/PicoCTF/HeresALIBC/HeresALIBC/">
+<span class="md-ellipsis">
+    HeresALIBC
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3_1_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_1_3" id="__nav_3_1_3_label" tabindex="0">
+<span class="md-ellipsis">
+    UnsubscriptionsAreFree
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_1_3_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_3_1_3">
+<span class="md-nav__icon md-icon"></span>
+            UnsubscriptionsAreFree
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../CTF-Writeups/PicoCTF/UnsubscriptionsAreFree/UnsubscriptionsAreFree/">
+<span class="md-ellipsis">
+    UnsubscriptionsAreFree
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+<span class="md-ellipsis">
+    WebAssembly Internals
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            WebAssembly Internals
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../WebAssembly-Internals/Background/">
+<span class="md-ellipsis">
+    Background
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../WebAssembly-Internals/Binaries/">
+<span class="md-ellipsis">
+    Binaries
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../WebAssembly-Internals/Compilation/">
+<span class="md-ellipsis">
+    Compilation
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../WebAssembly-Internals/Debugging/">
+<span class="md-ellipsis">
+    Debugging
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../WebAssembly-Internals/Environments/">
+<span class="md-ellipsis">
+    Environments
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../WebAssembly-Internals/Introduction/">
+<span class="md-ellipsis">
+    Introduction
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#environment">
+<span class="md-ellipsis">
+      Environment
+    </span>
+</a>
+<nav aria-label="Environment" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#vm">
+<span class="md-ellipsis">
+      VM
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#container">
+<span class="md-ellipsis">
+      Container
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#kernel">
+<span class="md-ellipsis">
+      Kernel
+    </span>
+</a>
+<nav aria-label="Kernel" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#added-exports">
+<span class="md-ellipsis">
+      Added Exports
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#removing-safety-checks-in-code">
+<span class="md-ellipsis">
+      Removing Safety Checks in Code
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#removing-safety-checks-in-config">
+<span class="md-ellipsis">
+      Removing Safety Checks in Config
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#vulnerable-module">
+<span class="md-ellipsis">
+      Vulnerable Module
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#deployment">
+<span class="md-ellipsis">
+      Deployment
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1>Making a Kernel CTF (PUCon'24 pwn CTF)</h1>
+<p>Recently I had the pleasure of designing some challenges for a CTF held at my alma mater, University of the Punjab. Despite having reasonable experience with solving kernel challenges in the past, this was my first time actually making a kernel challenge on my own.</p>
+<p>The idea was pretty simple, write a module that had a simple buffer overflow that led to RIP control. The execution however, was not that simple, so I decided to write this blog to document everything it took to set my challenges up.</p>
+<h2 id="environment">Environment<a class="headerlink" href="#environment" title="Permanent link">¶</a></h2>
+<p>The challenge was going to be hosted on CTFd's managed hosting so it had to be able to run in a Docker container. Since the container was going to run on CTFd infrastructure, we couldn't be sure what kernel we were going to get. To get past this we decided to run our challenge inside a <code>qemu</code> VM inside our container.  </p>
+<h3 id="vm">VM<a class="headerlink" href="#vm" title="Permanent link">¶</a></h3>
+<p>Initially for the guest OS, we went with the syzcaller debootstrap script (https://github.com/google/syzkaller/blob/master/tools/create-image.sh) that sets up a fully featured Debian image for us.  After setting it up we found out the VM was using way more memory than what CTFd allowed for one container so we switched to using a simple <code>initramfs</code> with <code>busybox</code> setup.<br/>
+Our setup was similar to <code>hxp-ctfs</code> kernel ROP challenge (https://lkmidas.github.io/posts/20210123-linux-kernel-pwn-part-1/) with a modified <code>run.sh</code> script.</p>
+<pre><code class="language-bash">read -p "Enter the link to your exploit binary: " link
+
+wget $link -O exploit
+chmod 777 ./exploit
+sleep 1
+./decompress.sh
+rm intramfs/exploit
+cp ./exploit initramfs/
+./compress.sh
+
+qemu-system-x86_64 \
+  -snapshot \
+  -kernel kernel/arch/x86/boot/bzImage \
+  -smp cores=1,threads=1 \
+  -initrd initramfs.cpio.gz \
+  -append "console=ttyS0 debug earlyprintk=serial oops=panic nokaslr smap smep selinux=0 pti tsc=unstable net.ifnames=0 panic=1000 cgroup_disable=memory" \
+  -net nic -net user,hostfwd=tcp::${SSH_PORT}-:22 \
+  -nographic \
+  -m 128M \
+  -monitor none,server,nowait,nodelay,reconnect=-1 \
+  -cpu kvm64,+smap,+smep \
+  2&gt;&amp;1
+</code></pre>
+<p>Since the exploit was supposed to run locally on the VM, we provided a way for the contestants to upload their exploit as soon as they connected by reading in a link at the start and downloading a file from there and putting it in the <code>initramfs</code>.</p>
+<h3 id="container">Container<a class="headerlink" href="#container" title="Permanent link">¶</a></h3>
+<p>The container environment was pretty simple. <code>cpio</code> and <code>gzip</code> were required to modify the <code>initramfs</code> and put the contestants exploits into the VM. <code>wget</code> was used to download the exploit. <code>qemu</code> was used to run the VM.  </p>
+<pre><code class="language-dockerfile">FROM ubuntu:latest
+
+RUN apt-get update
+RUN apt-get install -y qemu qemu-system-x86 qemu-utils socat cpio gzip wget 
+
+EXPOSE 1337
+
+RUN useradd -d /home/ctf -m -p ctf -s /bin/bash ctf
+RUN echo "ctf:ctf" | chpasswd
+RUN ulimit -c 0
+
+WORKDIR /home/ctf
+COPY kernel ./kernel
+COPY run.sh ./run.sh
+COPY initramfs.cpio.gz ./initramfs.cpio.gz
+COPY compress.sh ./compress.sh
+COPY decompress.sh ./decompress.sh
+RUN chmod +x *.sh
+RUN chmod 666 ./initramfs.cpio.gz
+
+EXPOSE 1337
+USER ctf
+CMD socat tcp-l:1337,reuseaddr,fork EXEC:"./run.sh",pty,stderr
+</code></pre>
+<p>Initially we used <code>ynetd</code> to serve the challenge but for some reason, one night before the CTF was supposed to star, <code>ynetd</code> decided to bail on us and started sending EOF on <code>stdin</code> as soon as we attempted to connect. For this reason we shifted to using <code>socat</code>. Unfortunately this meant the shell that was served was unstable by default and we only figured out how to connect to it stably after the competition ended. Fortunately the kernel challenges were able to be solved with unstable shells.</p>
+<pre><code class="language-bash">socat file:`tty`,raw,echo=0 tcp:&lt;challenge-link&gt;:&lt;port&gt;
+</code></pre>
+<h2 id="kernel">Kernel<a class="headerlink" href="#kernel" title="Permanent link">¶</a></h2>
+<p>The kernel we chose was <code>v6.6.16</code> and we applied some of our own patches to make it easier to exploit.</p>
+<h3 id="added-exports">Added Exports<a class="headerlink" href="#added-exports" title="Permanent link">¶</a></h3>
+<p>Some symbols were exported so we could directly use them to make a win function in our module.<br/>
+<code>kernel/cred.c</code></p>
+<pre><code class="language-c">64 | EXPORT_SYMBOL(init_cred)
+</code></pre>
+<p><code>kernel/reboot.c</code></p>
+<pre><code class="language-c">832 | EXPORT_SYMBOL(run_cmd)
+</code></pre>
+<h3 id="removing-safety-checks-in-code">Removing Safety Checks in Code<a class="headerlink" href="#removing-safety-checks-in-code" title="Permanent link">¶</a></h3>
+<p>We had to remove the size check in <code>copy_to_user</code> and <code>copy_from_user</code> to make sure our module would actually receive more bytes than the buffer could hold.<br/>
+<code>include/linux/uaccess.h</code></p>
+<pre><code class="language-c">static __always_inline unsigned long __must_check
+copy_from_user(void *to, const void __user *from, unsigned long n)
+{
+    // if (check_copy_size(to, n, false))
+        n = _copy_from_user(to, from, n);
+    return n;
+}
+
+static __always_inline unsigned long __must_check
+copy_to_user(void __user *to, const void *from, unsigned long n)
+{
+    // if (check_copy_size(from, n, true))
+        n = _copy_to_user(to, from, n);
+    return n;
+}
+</code></pre>
+<h3 id="removing-safety-checks-in-config">Removing Safety Checks in Config<a class="headerlink" href="#removing-safety-checks-in-config" title="Permanent link">¶</a></h3>
+<p>We used <code>defconfig</code> which was based on <code>x86_64_defconfig</code> and edited it to turn off mitigations.
+<code>.config</code></p>
+<pre><code class="language-config">CONFIG_CC_HAS_RETURN_THUNK=n
+CONFIG_CALL_PADDING=n
+CONFIG_HAVE_CALL_THUNKS=n
+CONFIG_CALL_THUNKS=n
+CONFIG_PREFIX_SYMBOLS=n
+CONFIG_RETPOLINE=n
+CONFIG_RETHUNK=n
+CONFIG_CPU_UNRET_ENTRY=n
+CONFIG_CALL_DEPTH_TRACKING=n
+CONFIG_CPU_IBPB_ENTRY=n
+CONFIG_CPU_IBRS_ENTRY=n
+CONFIG_CPU_SRSO=n
+CONFIG_STACKPROTECTOR=n
+CONFIG_STACKPROTECTOR_STRONG=n
+</code></pre>
+<p>Retpoline and return thunk proved hard to turn off for some reason. Setting their variables to <code>n</code> wouldn't work and they'd get set to <code>y</code> as soon as we started the build. To get past this we had to remove the options directly from <code>arch/x86/Kconfig</code></p>
+<h2 id="vulnerable-module">Vulnerable Module<a class="headerlink" href="#vulnerable-module" title="Permanent link">¶</a></h2>
+<p>The module was pretty simple. It created a device that you could write to and read from. The vulnerability was in the unchecked read by the <code>copy_from_user</code> function that we patched earlier. <code>copy_from_user</code> was used to read unbounded data written from user-space into a kernel buffer of size 256 bytes.  </p>
+<p>We added a <code>file_sending_system</code> win function that escalated privileges using <code>commit_creds(&amp;init_cred)</code> and then read a file from the file-system using the <code>kernel_read_file_from_path</code> function defined in <code>fs/kernel_read_file.c</code>. We had to add pragmas to ensure this function would not be optimized out by the compiler since it wasn't being called anywhere.</p>
+<pre><code class="language-c">MODULE_LICENSE("GPL");
+MODULE_AUTHOR("papadoxie");
+MODULE_DESCRIPTION("Kernel Messaging System");
+MODULE_VERSION("1337");
+
+static int majorNumber;
+static char *message_to_return = NULL;
+static int size_of_message;
+static struct class *messageClass = NULL;
+static struct device *messageDevice = NULL;
+
+static struct file_operations fops =
+{
+        .open = dev_open,
+        .read = dev_read,
+        .write = dev_write,
+        .release = dev_release,
+};
+
+#pragma GCC push_options
+#pragma GCC optimize("O0")
+__attribute__((unused)) 
+__attribute((noreturn))
+volatile static int file_sending_system(void)
+{
+    printk(KERN_INFO "Messager: In the future I'll be able to send files to the kernel too!\n");
+    printk(KERN_INFO "Messager: No need to enable this function since it isn't completed\n");
+
+    char *file_path = "/root/flag.txt";
+    loff_t offset = 0;
+    size_t bufsize = 64;
+    size_t filesize = 4096;
+    enum kernel_read_file_id id = 0;
+    void *file_buf = kmalloc(bufsize, GFP_KERNEL);
+
+    commit_creds(&amp;init_cred);
+    kernel_read_file_from_path(file_path, offset, &amp;file_buf, bufsize, &amp;filesize, id);
+    printk(KERN_INFO "Messager: File content: %s\n", (char *)file_buf);
+    while(1)
+        ;
+}
+#pragma GCC pop_options
+
+static int __init mod_init(void)
+{
+    printk(KERN_INFO "#####################################################################################\n");
+    printk(KERN_INFO "\tPAPADOXIE'S EASY KERNEL MESSAGING SYSTEM\n");
+    printk(KERN_INFO "\tTransfer your message to the kernel and get a response back promptly!\n");
+    printk(KERN_INFO "\tMessager: Initializing......\n");
+    printk(KERN_INFO "#####################################################################################\n");
+
+
+    majorNumber = register_chrdev(0, DEVICE_NAME, &amp;fops);
+    if (majorNumber &lt; 0)
+    {
+        printk(KERN_ALERT "Messager: Failed to register a major number\n");
+        return majorNumber;
+    }
+    printk(KERN_INFO "Messager: Registered correctly with major number %d\n", majorNumber);
+
+    messageClass = class_create(CLASS_NAME);
+    if (IS_ERR(messageClass))
+    {
+        unregister_chrdev(majorNumber, DEVICE_NAME);
+        printk(KERN_ALERT "Messager: Failed to register device class\n");
+        return PTR_ERR(messageClass);
+    }
+    printk(KERN_INFO "Messager: Device class registered correctly\n");
+
+    messageDevice = device_create(messageClass, NULL, MKDEV(majorNumber, 0), NULL, DEVICE_NAME);
+    if (IS_ERR(messageDevice))
+    {
+        class_destroy(messageClass);
+        unregister_chrdev(majorNumber, DEVICE_NAME);
+        printk(KERN_ALERT "Failed to create the device\n");
+        return PTR_ERR(messageDevice);
+    }
+    printk(KERN_INFO "Messager: device class created correctly\n");
+    return 0;
+}
+
+static void __exit mod_exit(void)
+{
+    device_destroy(messageClass, MKDEV(majorNumber, 0));
+    class_unregister(messageClass);
+    class_destroy(messageClass);
+    unregister_chrdev(majorNumber, DEVICE_NAME);
+    printk(KERN_INFO "Messager: Goodbye from the LKM!\n");
+}
+
+static int dev_open(struct inode *inodep, struct file *filep)
+{
+    printk(KERN_INFO "Messager: Kernel communication link established\n");
+    return 0;
+}
+
+static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *offset)
+{
+    int error_count = 0;
+    error_count = copy_to_user(buffer, message_to_return, size_of_message);
+
+    if (error_count == 0)
+    {
+        printk(KERN_INFO "Messager: Sent %d characters to the user\n", size_of_message);
+        kfree(message_to_return);
+        return (size_of_message = 0);
+    }
+    else
+    {
+        printk(KERN_INFO "Messager: Failed to send %d characters to the user\n", error_count);
+        return -EFAULT;
+    }
+}
+
+static ssize_t dev_write(struct file *filep, const char *buffer, size_t len, loff_t *offset)
+{
+    char message[256];
+    if (copy_from_user(message, buffer, len))
+    {
+        printk(KERN_ALERT "Messager: Failed to copy data from user\n");
+        return -EFAULT;
+    }
+
+    message_to_return = kmalloc(len, GFP_KERNEL);
+    memcpy(message_to_return, message, len);
+
+    size_of_message = len;
+    printk(KERN_INFO "Messager: Received %zu characters from the user\n", len);
+    return len;
+}
+
+static int dev_release(struct inode *inodep, struct file *filep)
+{
+    printk(KERN_INFO "Messager: Device successfully closed\n");
+    return 0;
+}
+
+module_init(mod_init);
+module_exit(mod_exit);
+</code></pre>
+<h2 id="deployment">Deployment<a class="headerlink" href="#deployment" title="Permanent link">¶</a></h2>
+<p>After setting all that up locally, it was time to deploy the challenge on CTFd. This was as simple as deploying any other challenge. First we built the Docker image for the challenge and tagged it. Then we pushed it to the CTFd repo and it miraculously worked...... after 3 days of debugging and rewriting.</p>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+<script src="../assets/javascripts/bundle.8fd75fb4.min.js"></script>
+<script src="../javascripts/mathjax.js"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</body>
+</html>
