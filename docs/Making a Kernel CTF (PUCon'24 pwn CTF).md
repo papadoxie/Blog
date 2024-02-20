@@ -75,11 +75,12 @@ The kernel we chose was `v6.6.16` and we applied some of our own patches to make
 
 ### Added Exports
 Some symbols were exported so we could directly use them to make a win function in our module.
-```c {kernel/cred.c}
+`kernel/cred.c`
+```c
 64 | EXPORT_SYMBOL(init_cred)
-```
-
-```c {kernel/reboot.c}
+``` 
+`kernel/reboot.c`
+```c
 832 | EXPORT_SYMBOL(run_cmd)
 ```
 
@@ -105,7 +106,8 @@ copy_to_user(void __user *to, const void *from, unsigned long n)
 
 ### Removing Safety Checks in Config
 We used `defconfig` which was based on `x86_64_defconfig` and edited it to turn off mitigations.
-```config {.config}
+`.config`
+```config
 CONFIG_CC_HAS_RETURN_THUNK=n
 CONFIG_CALL_PADDING=n
 CONFIG_HAVE_CALL_THUNKS=n
