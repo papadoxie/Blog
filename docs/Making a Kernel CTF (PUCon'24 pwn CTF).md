@@ -74,7 +74,7 @@ socat file:`tty`,raw,echo=0 tcp:<challenge-link>:<port>
 The kernel we chose was `v6.6.16` and we applied some of our own patches to make it easier to exploit.
 
 ### Added Exports
-Some symbols were exported so we could directly use them to make a win function in our module.
+Some symbols were exported so we could directly use them to make a win function in our module.  
 `kernel/cred.c`
 ```c
 64 | EXPORT_SYMBOL(init_cred)
@@ -85,8 +85,9 @@ Some symbols were exported so we could directly use them to make a win function 
 ```
 
 ### Removing Safety Checks in Code
-We had to remove the size check in `copy_to_user` and `copy_from_user` to make sure our module would actually receive more bytes than the buffer could hold.
-```c {include/linux/uaccess.h}
+We had to remove the size check in `copy_to_user` and `copy_from_user` to make sure our module would actually receive more bytes than the buffer could hold.  
+`include/linux/uaccess.h`
+```c
 static __always_inline unsigned long __must_check
 copy_from_user(void *to, const void __user *from, unsigned long n)
 {
