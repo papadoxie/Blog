@@ -9,8 +9,8 @@ theme:
     # Light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: indigo
-      accent: pink
+      primary: deep purple
+      accent: deep purple
       toggle:
         icon: material/toggle-switch-off-outline
         name: Switch to dark mode
@@ -18,8 +18,8 @@ theme:
     # Dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: indigo
-      accent: pink
+      primary: deep purple
+      accent: deep purple
       toggle:
         icon: material/toggle-switch
         name: Switch to light mode
@@ -30,19 +30,19 @@ markdown_extensions:
   # - attr_list
   - pymdownx.arithmatex:
       generic: true
-  # - pymdownx.superfences
-  # - pymdownx.details
-  # - pymdownx.magiclink
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.magiclink
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
       pygments_lang_class: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets
-  - pymdownx.snippets
   - def_list
+  - pymdownx.snippets
+  - pymdownx.snippets
+  - pymdownx.inlinehilite
   - pymdownx.critic
   - pymdownx.caret
   - pymdownx.keys
