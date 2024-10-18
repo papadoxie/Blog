@@ -39,7 +39,7 @@ Since the exploit was supposed to run locally on the VM, we provided a way for t
 ### Container
 The container environment was pretty simple. `cpio` and `gzip` were required to modify the `initramfs` and put the contestants exploits into the VM. `wget` was used to download the exploit. `qemu` was used to run the VM.  
 
-```dockerfile
+```Dockerfile title="Dockerfile"
 FROM ubuntu:latest
 
 RUN apt-get update
@@ -75,12 +75,11 @@ The kernel we chose was `v6.6.16` and we applied some of our own patches to make
 
 ### Added Exports
 Some symbols were exported so we could directly use them to make a win function in our module.  
-`kernel/cred.c`
-```c
+```c title="kernel/cred.c"
 64 | EXPORT_SYMBOL(init_cred)
 ``` 
-`kernel/reboot.c`
-```c
+
+```c title="kernel/reboot.c"
 832 | EXPORT_SYMBOL(run_cmd)
 ```
 
@@ -107,8 +106,7 @@ copy_to_user(void __user *to, const void *from, unsigned long n)
 
 ### Removing Safety Checks in Config
 We used `defconfig` which was based on `x86_64_defconfig` and edited it to turn off mitigations.
-`.config`
-```config
+```title=".config"
 CONFIG_CC_HAS_RETURN_THUNK=n
 CONFIG_CALL_PADDING=n
 CONFIG_HAVE_CALL_THUNKS=n
