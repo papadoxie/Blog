@@ -9,7 +9,7 @@ The challenge was going to be hosted on CTFd's managed hosting so it had to be a
 Initially for the guest OS, we went with the syzcaller debootstrap script (https://github.com/google/syzkaller/blob/master/tools/create-image.sh) that sets up a fully featured Debian image for us.  After setting it up we found out the VM was using way more memory than what CTFd allowed for one container so we switched to using a simple `initramfs` with `busybox` setup.  
 Our setup was similar to `hxp-ctfs` kernel ROP challenge (https://lkmidas.github.io/posts/20210123-linux-kernel-pwn-part-1/) with a modified `run.sh` script.
 
-```bash
+```bash linenums="1"
 read -p "Enter the link to your exploit binary: " link
 
 wget $link -O exploit
@@ -39,7 +39,7 @@ Since the exploit was supposed to run locally on the VM, we provided a way for t
 ### Container
 The container environment was pretty simple. `cpio` and `gzip` were required to modify the `initramfs` and put the contestants exploits into the VM. `wget` was used to download the exploit. `qemu` was used to run the VM.  
 
-```Dockerfile title="Dockerfile"
+```Dockerfile title="Dockerfile" linenums="1"
 FROM ubuntu:latest
 
 RUN apt-get update
@@ -75,18 +75,18 @@ The kernel we chose was `v6.6.16` and we applied some of our own patches to make
 
 ### Added Exports
 Some symbols were exported so we could directly use them to make a win function in our module.  
-```c title="kernel/cred.c"
-64 | EXPORT_SYMBOL(init_cred)
+```c title="kernel/cred.c" linenums="64"
+EXPORT_SYMBOL(init_cred)
 ``` 
 
-```c title="kernel/reboot.c"
-832 | EXPORT_SYMBOL(run_cmd)
+```c title="kernel/reboot.c" linenums="832"
+EXPORT_SYMBOL(run_cmd)
 ```
 
 ### Removing Safety Checks in Code
 We had to remove the size check in `copy_to_user` and `copy_from_user` to make sure our module would actually receive more bytes than the buffer could hold.  
 `include/linux/uaccess.h`
-```c
+```c linenums="1"
 static __always_inline unsigned long __must_check
 copy_from_user(void *to, const void __user *from, unsigned long n)
 {
@@ -129,7 +129,7 @@ Retpoline and return thunk proved hard to turn off for some reason. Setting thei
 The module was pretty simple. It created a device that you could write to and read from. The vulnerability was in the unchecked read by the `copy_from_user` function that we patched earlier. `copy_from_user` was used to read unbounded data written from user-space into a kernel buffer of size 256 bytes.  
 
 We added a `file_sending_system` win function that escalated privileges using `commit_creds(&init_cred)` and then read a file from the file-system using the `kernel_read_file_from_path` function defined in `fs/kernel_read_file.c`. We had to add pragmas to ensure this function would not be optimized out by the compiler since it wasn't being called anywhere.
-```c
+```c title="vuln.c" linenums="1"
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("papadoxie");
 MODULE_DESCRIPTION("Kernel Messaging System");
