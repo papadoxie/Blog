@@ -1,0 +1,627 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href=".." rel="prev"/>
+<link href="../Kernel%20Fuzzing%20with%20syzkaller%20on%20ESXi/" rel="next"/>
+<link href="../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
+<title>Overview - papad0xie</title>
+<link href="../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
+<link href="../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="deep-purple" data-md-color-primary="deep-purple" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#overview">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="papad0xie" class="md-header__button md-logo" data-md-component="logo" href=".." title="papad0xie">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            papad0xie
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Overview
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="deep-purple" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="deep-purple" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="deep-purple" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="deep-purple" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="papad0xie" class="md-nav__button md-logo" data-md-component="logo" href=".." title="papad0xie">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    papad0xie
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="..">
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Kernel%20Fuzzing%20with%20syzkaller%20on%20ESXi/">
+<span class="md-ellipsis">
+    
+  
+    Kernel Fuzzing with syzkaller on ESXi
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Making%20a%20Kernel%20CTF%20%28PUCon%2724%20pwn%20CTF%29/">
+<span class="md-ellipsis">
+    
+  
+    Making a Kernel CTF (PUCon'24 pwn CTF)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    CTF Writeups
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    CTF Writeups
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    PicoCTF
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    PicoCTF
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1_1" id="__nav_5_1_1_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    CacheMeOutside
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_1_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_1_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    CacheMeOutside
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../CTF-Writeups/PicoCTF/CacheMeOutside/CacheMeOutside/">
+<span class="md-ellipsis">
+    
+  
+    CacheMeOutside
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1_2" id="__nav_5_1_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    HeresALIBC
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_2_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_1_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    HeresALIBC
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../CTF-Writeups/PicoCTF/HeresALIBC/HeresALIBC/">
+<span class="md-ellipsis">
+    
+  
+    HeresALIBC
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1_3" id="__nav_5_1_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    UnsubscriptionsAreFree
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_3_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_1_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    UnsubscriptionsAreFree
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../CTF-Writeups/PicoCTF/UnsubscriptionsAreFree/UnsubscriptionsAreFree/">
+<span class="md-ellipsis">
+    
+  
+    UnsubscriptionsAreFree
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    WebAssembly Internals
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    WebAssembly Internals
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../WebAssembly-Internals/Background/">
+<span class="md-ellipsis">
+    
+  
+    Background
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../WebAssembly-Internals/Binaries/">
+<span class="md-ellipsis">
+    
+  
+    Binaries
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../WebAssembly-Internals/Compilation/">
+<span class="md-ellipsis">
+    
+  
+    Compilation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../WebAssembly-Internals/Debugging/">
+<span class="md-ellipsis">
+    
+  
+    Debugging
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../WebAssembly-Internals/Environments/">
+<span class="md-ellipsis">
+    
+  
+    Environments
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../WebAssembly-Internals/Introduction/">
+<span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h1>
+<p>Intel CET is a hardware assisted mitigation against control-flow hijacking attacks in Intel x86 and x86-64 processors. It introduces two new mitigation techniques:<br/>
+- <a href="#be1b31">SHSTK</a>
+- <a href="#d764c4">IBT</a></p>
+<p>SHSTK and IBT exist to deal with <a href="#54ccb0">ROP</a> and <a href="#976c8f">JOP</a>/<a href="#4cae67">COP</a> respectively. Specifically SHSTK is a backward-edge <a href="#cd12c6">CFI</a> mitigation and IBT is a forward-edge CFI mitigation.  </p>
+<p>CET requires a complex and thorough chain of support from both hardware and software. Since hardware and software implementation details both are quite extensive, we will structure the following document into multiple parts.</p>
+<h1 id="where-does-cet-fit">Where does CET fit?<a class="headerlink" href="#where-does-cet-fit" title="Permanent link">¶</a></h1>
+<p>CET is a cross between a reactive and a proactive measure. It kicks in after memory has already been corrupted and tries to stop an attacker from developing that into a control flow primitive. <br/>
+Typically after memory corruption, there are two main ways for an attacker to take control of the <a href="#c1ec26">IP</a> and hijack the control flow to perform malicious behavior:
+1. ## Overwrite the Return Address (Backward Edge)
+   Attackers can overwrite the return address of a function on the function stack. When a function returns, this address is popped off the stack and placed in the IP register. If an attacker controls this address they can divert control flow to an address of their liking and execute instructions from there.<br/>
+   ROP is one of the techniques that can be used to create an exploit after getting control of the return address. Attackers can chain together a series of instructions already available within the executable sections of the program to create their own malicious program that runs inside the target process.<br/>
+   Typically one link (or gadget) in a ROP chain consists of a set of one or more instructions that end with the <code>ret</code> instruction. This means that after each gadget executes, there will be a <code>return</code> which leads to the next gadget in the chain. Hence the name Return Oriented Programming.<br/>
+   To mitigate this, shadow stacks can be used. A shadow stack is a secondary stack that cannot be modified even if an attacker obtains memory corruption on the regular stack. When a function is called, the return address is pushed on both the regular stack and the shadow stack. When the <code>ret</code> instruction is executed, the return address is popped off the regular stack and the shadow stack and then compared with one another. If they don't match, as is the case when an attacker overwrites the return address, the CET mechanism triggers an exception and process execution is terminated.
+2. ## Overwrite an Address on the Forward Edge
+   Many programs contain mutable addresses on the forward edge e.g. function pointers, jump tables, v-tables for class methods, etc. These addresses are used in indirect branch statements e.g. <code>jmp rax</code> or <code>call rcx</code>, instead of the typical direct branches e.g. <code>jmp 0x4010</code> . If an attacker controls one or more of these addresses, they can point it towards a ROP gadget, thereby triggering a ROP chain. They can also point it towards a JOP/COP gadget.
+   COP and JOP are similar to ROP. JOP consists of a sequence of instructions that end with a <code>jmp</code> or similar instruction. COP consists of a sequence of instructions that end with a <code>call</code> statement
+   To mitigate this, Indirect Branch Tracking can be used. The code that the IP jumps to after a <a href="#1f7552">branch instruction</a> is called a <a href="#d2bc84">branch target</a>. If the target is an <a href="#661483">indirect branch</a>, compilers can place a special <code>endbr64</code> or <code>endbr32</code> end-branch instruction to specify that it is a valid branch target. When IBT is enabled, all indirect branch instructions must resolve to a target that has the end-branch instruction otherwise the CET mechanism triggers an exception and process execution is terminated.</p>
+<h1 id="hardware-specification">Hardware Specification<a class="headerlink" href="#hardware-specification" title="Permanent link">¶</a></h1>
+<p>The CET implementation in hardware consists of extensions to the Intel x86 and x86-64 <a href="#4bf34c">ISA</a>. </p>
+<h2 id="control-protection-exception-cp">Control Protection Exception (#CP)<a class="headerlink" href="#control-protection-exception-cp" title="Permanent link">¶</a></h2>
+<p>CET introduces a new Control Protection (#CP) exception class with interrupt vector 21. This exception is raised when a control flow instruction results in a transfer that violates the constraints introduced by CET.  </p>
+<blockquote>
+<p>❗<strong>NOTE:</strong> The CP exception occurs before the control flow instruction is actually executed</p>
+</blockquote>
+<p>CP is part of the contributory class of exceptions which means that if another contributory exception is raised during CP handling, it will trigger a Double Fault.</p>
+<p>![[Pasted image 20250703163556.png]]</p>
+<p>When this exception is raised, an error code is pushed on the stack which tells the CP exception handler what event caused the exception. An exception may be raised by the following events:
+- SHSTK violation after near <code>ret</code>
+- SHSTK violation after far <code>ret</code>
+- SHSTK violation after <code>iret</code>
+- Missing <code>endbr</code> instruction at indirect branch target
+- Token check failure after <code>rstorssp</code>
+- Token check failure after <code>setssbsy</code></p>
+<p>The contents of the CS and IP registers are saved to keep track of what instruction caused the CP exception.</p>
+<h2 id="cet-components">CET Components<a class="headerlink" href="#cet-components" title="Permanent link">¶</a></h2>
+<p>As we discussed before, CET is a name for two mitigation techniques. SHSTK and IBT. From an implementation perspective, these can be further broken down in the following: 
+- Supervisor Shadow Stack or Kernel Shadow Stack
+- User Space Shadow Stack
+- Kernel IBT
+- User Space IBT</p>
+<h2 id="enabling-cet-in-the-hardware">Enabling CET in the Hardware<a class="headerlink" href="#enabling-cet-in-the-hardware" title="Permanent link">¶</a></h2>
+<p>To enable CET in the hardware, bit 23 of the CR4 register must be set. This is also known as CR4.CET or the CET Master Enable.
+Setting this bit does not mean SHSTK and IBT will work. Each CET feature must be enabled on its own using an <a href="#bf5096">MSR</a>. The following two MSR's are available for CET features:
+- <code>MSR IA32_U_CET (0x6A0)</code>: User space CET
+- <code>MSR IA32_S_CET (0x6A2)</code>: Kernel space CET
+There are 5 other MSR's that store shadow stack addresses for different <a href="#ac2db0">ring privilege levels</a>.</p>
+<blockquote>
+<p>❗<strong>NOTE:</strong> User space CET refers to <code>CPL3</code> and Kernel space CET refers to <code>CPL0</code> in the ring privilege model</p>
+</blockquote>
+<p>The above two MSR's both follow the same format:</p>
+<table>
+<thead>
+<tr>
+<th>Bit</th>
+<th>Feature Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td><code>SH_STK_EN</code></td>
+<td>Enable shadow stack</td>
+</tr>
+<tr>
+<td>1</td>
+<td><code>WR_SHSTK_EN</code></td>
+<td>Enable WRSS</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>ENBR_EN</code></td>
+<td>Enable IBT</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>LEG_IW_EN</code></td>
+<td>Enable legacy IBT support</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>NO_TRACK_EN</code></td>
+<td>Enable the <code>notrack</code> prefix</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>SUPPRESS_DIS</code></td>
+<td>Disable IBT suppression</td>
+</tr>
+<tr>
+<td>6-9</td>
+<td><code>RSVD</code></td>
+<td>Reserved (always 0)</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>SUPPRESS</code></td>
+<td>Suppress IBT</td>
+</tr>
+<tr>
+<td>11</td>
+<td><code>TRACKER</code></td>
+<td>Tracks the state of the IBT state machine</td>
+</tr>
+<tr>
+<td>12-63</td>
+<td><code>EB_LEG_BITMAP_BASE</code></td>
+<td>Address of valid branch targets without <code>endbr</code></td>
+</tr>
+</tbody>
+</table>
+<p>Setting the MSR bits as shown in the above table enables and configures CET features as needed. As we can see, there is some new terminology in the table, so let's now discuss those.</p>
+<h3 id="wrss-write-to-shadow-stack">WRSS (Write to Shadow Stack)<a class="headerlink" href="#wrss-write-to-shadow-stack" title="Permanent link">¶</a></h3>
+<p>The <code>WR_SHSTK_EN</code> flag enables the <code>wrss</code> instruction. This allows writes to the shadow stack in a controlled manner. Manual writes to the shadow stack may only be done via this instruction. Directly writing to shadow stack memory by dereferencing a pointer is not allowed.</p>
+<h3 id="legacy-ibt-support">Legacy IBT Support<a class="headerlink" href="#legacy-ibt-support" title="Permanent link">¶</a></h3>
+<p>The <code>LEG_IW_EN</code> flag enables support for IBT enabled systems to run non IBT supported code. This allows code running with IBT support to perform indirect jumps into code that is not built with IBT support i.e. code that does not have <code>endbr</code> on the indirect branch targets.<br/>
+The <code>EB_LEG_BITMAP_BASE</code> field contains an address to a bitmap. This bitmap points to pages in memory that contain legacy code without the <code>endbr</code> instruction. On a system where IBT is enabled and <code>SUPPRESS</code> is not set, a process may perform an indirect jump into any page referred to by this bitmap without raising  a CP exception.</p>
+<h3 id="no-track">No Track<a class="headerlink" href="#no-track" title="Permanent link">¶</a></h3>
+<p>The <code>NO_TRACK_EN</code> flag enables the use of the <code>notrack</code> instruction. Prefacing an indirect branch instruction with <code>notrack</code>, disables IBT for that specific control flow transfer e.g.
+<code>notrack call [rax]</code>.</p>
+<h3 id="ibt-suppression">IBT Suppression<a class="headerlink" href="#ibt-suppression" title="Permanent link">¶</a></h3>
+<p>The <code>SUPPRESS</code> and <code>SUPPRESS_DIS</code>flags are used to control the ability of the IBT mechanism to raise the CP exception. When <code>SUPPRESS</code> is enabled, IBT wont raise an exception. When <code>SUPRRESS_DIS</code> is enabled, the value of the <code>SUPPRESS</code> flag will be ignored and raising CP will not be blocked.</p>
+<h3 id="rsvd-reserved">RSVD (Reserved)<a class="headerlink" href="#rsvd-reserved" title="Permanent link">¶</a></h3>
+<p>These bits of the MSR are reserved for potential future use. For now, they must always be set to 0.</p>
+<h3 id="tracker">Tracker<a class="headerlink" href="#tracker" title="Permanent link">¶</a></h3>
+<p>This bit tracks the state of the IBT state machine. The IBT state machine has 2 possible states:
+- <code>0</code>: IDLE
+- <code>1</code>: WAIT_FOR_ENDBRANCH
+When an indirect branch instruction is executed, the IBT state machine enters the WAIT_FOR_ENDBRANCH state. When an <code>endbr</code> instruction is encountered, the state machine returns to the IDLE state.</p>
+<h2 id="shadow-stack">Shadow Stack<a class="headerlink" href="#shadow-stack" title="Permanent link">¶</a></h2>
+<p>The shadow stack is a secondary stack that is managed parallel to each program stack. It is only used for storing data relevant to control flow operations.</p>
+<h1 id="references">References<a class="headerlink" href="#references" title="Permanent link">¶</a></h1>
+<ul>
+<li>Intel® Control-Flow Enforcement Technology Specification Document Number: 334525-003, Revision 3.0 <a href="https://kib.kiev.ua/x86docs/Intel/CET/334525-003.pdf">https://kib.kiev.ua/x86docs/Intel/CET/334525-003.pdf</a></li>
+<li>Intel® 64 and IA-32 Architectures Software Developer’s Manual, Volume 3 (Section: Interrupt and Exception Handling) <a href="https://cdrdv2.intel.com/v1/dl/getContent/671447">https://cdrdv2.intel.com/v1/dl/getContent/671447</a></li>
+<li>Shadow stacks for user space <a href="https://lwn.net/Articles/885220/">https://lwn.net/Articles/885220/</a></li>
+</ul>
+<h1 id="appendix">Appendix<a class="headerlink" href="#appendix" title="Permanent link">¶</a></h1>
+<ul>
+<li><strong>CET</strong>: Control-Flow Enforcement Technology</li>
+<li><strong>SHSTK</strong>: Shadow Stack ^be1b31</li>
+<li><strong>IBT</strong>: Indirect Branch Tracking ^d764c4</li>
+<li><strong>ROP</strong>: Return Oriented Programming ^54ccb0</li>
+<li><strong>JOP</strong>: Jump Oriented Programming ^976c8f</li>
+<li><strong>COP</strong>: Call Oriented Programming ^4cae67</li>
+<li><strong>CFI</strong>: Control Flow Integrity ^cd12c6</li>
+<li><strong>IP</strong>: Instruction Pointer. Also known as Program Counter (PC) ^c1ec26</li>
+<li><strong>Branch Instruction</strong>: An instruction that diverts control flow from the normal sequential flow e.g. <code>jmp</code>, <code>call</code>, <code>loop</code> ^1f7552</li>
+<li><strong>Branch Target</strong>: The address that is loaded into the IP after a branch instruction is executed ^d2bc84</li>
+<li><strong>Direct Branch</strong>: A branch whose target is predetermined and usually immutable. Typically these are offsets from the IP</li>
+<li><strong>Indirect Branch</strong>: A branch whose target is variable and computed at run-time ^661483</li>
+<li><strong>ISA</strong>: Instruction Set Architecture ^4bf34c</li>
+<li><strong>#CP</strong>: Control Protection Exception in Intel x86 and x86-64 processors</li>
+<li><strong>MSR</strong>: Model Specific Register. Registers in CPU's that are used to enable or disable processor specific features. ^bf5096</li>
+<li><strong>Ring Privilege Level</strong>: Levels in the ring privilege model for CPU's, i.e. <code>CPL0 - CPL3</code> ^ac2db0</li>
+</ul>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+<script src="../javascripts/mathjax.js"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</body>
+</html>
